@@ -13,6 +13,7 @@ extern MunitTest tests_gkcrypt[];
 extern MunitTest tests_takion[];
 extern MunitTest tests_fec[];
 extern MunitTest tests_regist[];
+extern MunitTest tests_remote_input[];
 #ifndef CHIAKI_LIB_ENABLE_MBEDTLS
 extern MunitTest tests_aia[];
 #endif
@@ -22,6 +23,13 @@ extern MunitTest tests_ffmpegdecoder[];
 #endif
 
 static MunitSuite suites[] = {
+	{
+		"/remote_input",
+		tests_remote_input,
+		NULL,
+		1,
+		MUNIT_SUITE_OPTION_NONE
+	},
 	{
 		"/seq_num",
 		tests_seq_num,
