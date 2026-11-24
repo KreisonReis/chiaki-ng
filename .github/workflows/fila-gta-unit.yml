@@ -1,0 +1,43 @@
+name: fila-gta unit tests (lib)
+
+on:
+  push:
+    branches:
+      - 'fila-gta/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install build-essential cmake ninja-build pkg-config \
+            libssl-dev libopus-dev libjson-c-dev libminiupnpc-dev libevent-dev \
+            python3-protobuf protobuf-compiler
+
+      - name: Configure
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCHIAKI_ENABLE_GUI=OFF \
+            -DCHIAKI_ENABLE_CLI=OFF \
+            -DCHIAKI_ENABLE_TESTS=ON \
+            -DCHIAKI_ENABLE_FFMPEG_DECODER=OFF \
+            -DCHIAKI_ENABLE_PI_DECODER=OFF \
+            -DCHIAKI_ENABLE_STEAMDECK_NATIVE=OFF \
+            -DCHIAKI_ENABLE_SETSU=OFF \
+            -DCHIAKI_ENABLE_SPEEX=OFF
+
+      - name: Build
+        run: cmake --build build --target chiaki-unit
+
+      - name: Run unit tests
+        run: ./build/test/chiaki-unit
