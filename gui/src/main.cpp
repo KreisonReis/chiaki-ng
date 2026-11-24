@@ -192,6 +192,9 @@ int real_main(int argc, char *argv[])
 	QCommandLineOption passcode_option("passcode", "Automatically send your PlayStation login passcode (only affects users with a login passcode set on their PlayStation console).", "passcode");
 	parser.addOption(passcode_option);
 
+	QCommandLineOption remote_input_option("remote-input-port", "Accept controller state over UDP on 127.0.0.1:<port> (only for use with stream command).", "port");
+	parser.addOption(remote_input_option);
+
 	QCommandLineOption opengl_option("opengl", "Switch the renderer to OpenGL from now on, for systems where Vulkan shows a blank window or crashes (switch back under Settings > Video > Renderer Backend).");
 	parser.addOption(opengl_option);
 
@@ -316,6 +319,18 @@ int real_main(int argc, char *argv[])
 				parser.isSet(fullscreen_option),
 				parser.isSet(zoom_option),
 				parser.isSet(stretch_option));
+
+		if(parser.isSet(remote_input_option))
+		{
+			bool port_ok = false;
+			uint port = parser.value(remote_input_option).toUInt(&port_ok);
+			if(!port_ok || port == 0 || port > 65535)
+			{
+				printf("Invalid --remote-input-port value: %s (expected 1-65535)\n", parser.value(remote_input_option).toLocal8Bit().constData());
+				return 1;
+			}
+			connect_info.remote_input_port = (quint16)port;
+		}
 
 		return RunStream(app, connect_info);
 	}

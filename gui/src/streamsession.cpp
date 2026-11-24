@@ -708,6 +708,15 @@ StreamSession::StreamSession(const StreamSessionConnectInfo &connect_info, QObje
 		}
 	});
 
+	if(connect_info.remote_input_port > 0)
+	{
+		remote_input = new RemoteInput(connect_info.remote_input_port, this);
+		if(remote_input->IsListening())
+			connect(remote_input, &RemoteInput::StateChanged, this, &StreamSession::SendFeedbackState);
+		else
+			CHIAKI_LOGE(GetChiakiLog(), "Remote input: could not listen on 127.0.0.1:%u", (unsigned)connect_info.remote_input_port);
+	}
+
 	StartAudioOutDrainThread();
 }
 
@@ -1285,6 +1294,11 @@ void StreamSession::DpadSendFeedbackState()
 #endif
 	chiaki_controller_state_or(&state, &state, &keyboard_state);
 	chiaki_controller_state_or(&state, &state, &touch_state);
+	if(remote_input)
+	{
+		ChiakiControllerState remote_state = remote_input->State();
+		chiaki_controller_state_or(&state, &state, &remote_state);
+	}
 
 	if(input_block)
 	{
@@ -1341,6 +1355,11 @@ void StreamSession::SendFeedbackState()
 #endif
 	chiaki_controller_state_or(&state, &state, &keyboard_state);
 	chiaki_controller_state_or(&state, &state, &touch_state);
+	if(remote_input)
+	{
+		ChiakiControllerState remote_state = remote_input->State();
+		chiaki_controller_state_or(&state, &state, &remote_state);
+	}
 
 	if(input_block)
 	{

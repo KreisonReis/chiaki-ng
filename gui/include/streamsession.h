@@ -31,6 +31,7 @@
 #include "sessionlog.h"
 #include "controllermanager.h"
 #include "settings.h"
+#include "remoteinput.h"
 
 #include <QObject>
 #include <QImage>
@@ -115,6 +116,7 @@ class SdeckHapticsWorker;
 		int32_t noise_suppress_level;
 		int32_t echo_suppress_level;
 #endif
+		quint16 remote_input_port = 0;
 		QString duid;
 		QString psn_token;
 		QString psn_account_id;
@@ -220,6 +222,7 @@ class StreamSession : public QObject
 		bool rumble_haptics_on;
 		float PS_TOUCHPAD_MAX_X, PS_TOUCHPAD_MAX_Y;
 		ChiakiControllerState keyboard_state;
+		RemoteInput *remote_input = nullptr;
 		ChiakiControllerState touch_state;
 		QMap<int, uint8_t> touch_tracker;
 		int8_t mouse_touch_id;
