@@ -32,6 +32,7 @@ set(HEADER_FILES
 		include/chiaki/feedback.h
 		include/chiaki/feedbacksender.h
 		include/chiaki/controller.h
+		include/chiaki/remoteinput.h
 		include/chiaki/takionsendbuffer.h
 		include/chiaki/time.h
 		include/chiaki/fec.h
@@ -77,6 +78,7 @@ set(SOURCE_FILES
 		src/feedback.c
 		src/feedbacksender.c
 		src/controller.c
+		src/remoteinput.c
 		src/takionsendbuffer.c
 		src/time.c
 		src/fec.c
