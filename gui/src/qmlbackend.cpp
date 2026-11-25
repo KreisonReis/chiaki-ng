@@ -594,7 +594,7 @@ void QmlBackend::resumeFromSleep()
         resume_session = false;
         if(session_info.duid.isEmpty())
         {
-            createSession({
+            StreamSessionConnectInfo resume_info(
                 session_info.settings,
                 session_info.target,
                 session_info.host,
@@ -606,8 +606,10 @@ void QmlBackend::resumeFromSleep()
                 session_info.auto_regist,
                 session_info.fullscreen,
                 session_info.zoom,
-                session_info.stretch,
-            });
+                session_info.stretch);
+            // fila-gta: keep remote input enabled when the session is resumed
+            resume_info.remote_input_port = session_info.remote_input_port;
+            createSession(resume_info);
         }
         else
         {

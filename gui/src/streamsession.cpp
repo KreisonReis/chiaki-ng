@@ -328,6 +328,11 @@ StreamSessionConnectInfo::StreamSessionConnectInfo(
 	this->psn_account_id = settings->GetPsnAccountId();
 	this->duid = std::move(duid);
 	this->auto_regist = auto_regist;
+	// fila-gta: remote input for every session (GUI clicks, resumes), not only `stream --remote-input-port`
+	bool remote_port_ok = false;
+	int remote_port = qEnvironmentVariableIntValue("CHIAKI_REMOTE_INPUT_PORT", &remote_port_ok);
+	if(remote_port_ok && remote_port > 0 && remote_port <= 65535)
+		this->remote_input_port = (quint16)remote_port;
 	this->dpad_touch_increment = settings->GetDpadTouchEnabled() ? settings->GetDpadTouchIncrement(): 0;
 	this->dpad_touch_shortcut1 = settings->GetDpadTouchShortcut1();
 	if(this->dpad_touch_shortcut1 > 0)
